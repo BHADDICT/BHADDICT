@@ -399,7 +399,6 @@
   </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-
 <script>
 window.addEventListener('load', function () {
   emailjs.init('jI4O--8j4phl8q7qx');
@@ -407,11 +406,25 @@ window.addEventListener('load', function () {
   const deliveryFee = 2.00;
   let discountRate = 0;
 
-  // Initialize sample cart if none exists (for testing/demo)
+  // For demo/testing only: initialize cart if not present
   if (!localStorage.getItem("cartData")) {
     localStorage.setItem("cartData", JSON.stringify([
-      { id: 1, name: "Réndezvouz “ Subtle ” Button Ups", price: 33.00, image: "/img/bo1.JPG", qty: 1, size: "M" },
-      { id: 2, name: "Réndezvouz “ Subtle ” Trousers", price: 35.00, image: "/img/pro3.JPEG", qty: 1, size: "L" }
+      {
+        id: 1,
+        name: "Réndezvouz “ Subtle ” Button Ups",
+        price: 33.00,
+        image: "./img/bo1.JPG",
+        qty: 1,
+        size: "M"
+      },
+      {
+        id: 2,
+        name: "Réndezvouz “ Subtle ” Trousers",
+        price: 35.00,
+        image: "./img/pro3.JPEG",
+        qty: 1,
+        size: "L"
+      }
     ]));
   }
 
@@ -439,8 +452,8 @@ window.addEventListener('load', function () {
         </div>`;
     });
 
-    let discountAmount = subtotal * discountRate;
-    let total = subtotal - discountAmount + deliveryFee;
+    const discountAmount = subtotal * discountRate;
+    const total = subtotal - discountAmount + deliveryFee;
 
     summary.innerHTML += `
       <div class="summary" style="border-top:1px solid #ccc; padding-top:10px;">
@@ -492,7 +505,7 @@ window.addEventListener('load', function () {
     }
 
     if (!paymentMethod) {
-      alert("Please select a payment method (Paid or COD).");
+      alert("Please select a payment method.");
       return;
     }
 
@@ -558,8 +571,7 @@ window.addEventListener('load', function () {
           <tr>
             <td colspan="3" align="right"><strong>Discount</strong></td>
             <td align="right">-$${discountAmount.toFixed(2)}</td>
-          </tr>
-          ` : ''}
+          </tr>` : ''}
           <tr>
             <td colspan="3" align="right"><strong>Delivery Fee</strong></td>
             <td align="right">$${deliveryFee.toFixed(2)}</td>
