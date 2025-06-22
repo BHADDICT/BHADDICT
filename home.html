@@ -387,9 +387,9 @@ function updateCart() {
   const cartNote = document.querySelector(".cart-note");
   if (cartNote) {
     if (hasButtonUps && !hasTrousers) {
-      cartNote.innerHTML = `Add <strong>Réndezvouz “ Subtle ” Trousers</strong> to save $5!`;
+      cartNote.innerHTML = `Add <strong>Réndezvouz “ Subtle ” Trousers</strong> to save $3!`;
     } else if (!hasButtonUps && hasTrousers) {
-      cartNote.innerHTML = `Add <strong>Réndezvouz “ Subtle ” Button Ups</strong> to save $5!`;
+      cartNote.innerHTML = `Add <strong>Réndezvouz “ Subtle ” Button Ups</strong> to save $3!`;
     } else {
       cartNote.innerHTML = `Shipping & taxes calculated at checkout`;
     }
