@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Product Page</title>
+    <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="pro.css">
+  <style>
+body {
+  margin: 0;
+  font-family: Helvetica, Arial, sans-serif;
+  background: #fff;
+  color: #000;
+}
+
+.container {
+  display: flex;
+  max-width: 1400px;
+  margin: auto;
+  overflow: hidden;
+  height: 100vh;
+}
+/* Cart Sidebar */
+#cartSidebar {
+  position: fixed;
+  top: 0;
+  right: -400px;
+  width: 400px;
+  height: 100vh;
+  background: #fff;
+  box-shadow: -4px 0 12px rgba(0,0,0,0.1);
+  padding: 20px;
+  overflow-y: auto;
+  transition: right 0.3s ease;
+  z-index: 1001;
+  font-family: 'Arial', sans-serif;
+}
+
+/* Overlay behind sidebar */
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.3);
+  display: none;
+  z-index: 1000;
+}
+
+/* Cart Header */
+#cartSidebar > h2 {
+  font-weight: 700;
+  letter-spacing: 2px;
+  font-size: 18px;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+}
+
+/* Close button */
+#cartClose {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 24px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-weight: 700;
+  color: #333;
+}
+
+/* Cart item container */
+.cart-item {
+  margin-bottom: 15px;
+}
+
+/* Cart item flex layout */
+.cart-item > div {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+/* Product image */
+.cart-item img {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Product details */
+.cart-item div > div {
+  flex: 1;
+}
+
+/* Product name and size */
+.cart-item p:first-child {
+  font-weight: 600;
+  font-size: 14px;
+  margin: 0 0 6px 0;
+  line-height: 1.2;
+  color: #222;
+}
+
+/* Quantity and price */
+.cart-item p:nth-child(2),
+.cart-item p:nth-child(3) {
+  font-size: 13px;
+  margin: 2px 0;
+  color: #555;
+}
+
+/* Remove button styling */
+.cart-item button {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #d00;
+  cursor: pointer;
+  border: none;
+  background: none;
+  padding: 0;
+}
+
+/* Horizontal separator line */
+.cart-item hr {
+  border: none;
+  border-top: 1px solid #eee;
+  margin-top: 10px;
+}
+
+/* Checkout button */
+#checkoutBtn {
+  margin-top: 20px;
+  background-color: #111;
+  color: white;
+  width: 100%;
+  padding: 15px 0;
+  font-weight: 700;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  transition: background-color 0.3s ease;
+}
+
+#checkoutBtn:hover {
+  background-color: #333;
+}
+
+/* Cart icon and count badge */
+#cartIcon {
+  position: relative;
+  cursor: pointer;
+}
+
+#cartCount {
+  position: absolute;
+  top: -6px;
+  right: -10px;
+  background: #d00;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 50%;
+  min-width: 20px;
+  text-align: center;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.product-gallery {
+  flex: 1;
+  overflow-y: auto;
+  padding: 2rem;
+  border-right: 1px solid #eee;
+}
+
+.image-scroll img {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.product-details {
+  flex: 1;
+  overflow-y: auto;
+  padding: 2rem;
+  margin-top: 5%;
+}
+
+.brand {
+  letter-spacing: 2px;
+  font-weight: 300;
+  font-size: 2rem;
+}
+
+.price {
+  font-size: 1.2rem;
+  margin: 0.5rem 0 1rem;
+}
+
+.size-guide {
+  font-size: 0.8rem;
+  color: #555;
+  text-decoration: underline;
+  margin: 10px 0;
+}
+
+
+select {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  margin: 0.5rem 0 1rem 0;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='12' viewBox='0 0 24 24' width='12' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 12px;
+  cursor: pointer;
+  transition: border 0.2s ease;
+}
+
+select:focus {
+  outline: none;
+  border-color: #888;
+}
+
+
+
+.add-to-cart {
+  padding: 12px;
+  width: 100%;
+  background: #000;
+  color: #fff;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.add-to-cart:hover {
+  opacity: 0.8;
+}
+
+.product-description {
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.product-description h3 {
+  font-weight: 400;
+  font-size: 1rem;
+  margin: 1rem 0 0.5rem;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 0.25rem;
+}
+
+.product-description ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.product-description li {
+  position: relative;
+  padding-left: 1rem;
+  margin-bottom: 0.4rem;
+}
+
+.product-description li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #ccc;
+  font-size: 0.8rem;
+}
+
+.accordion {
+  width: 100%;
+  max-width: 500px;
+}
+
+.accordion-toggle {
+  width: 100%;
+  padding: 12px 20px;
+  text-align: left;
+  background: #000;
+  color: #fff;
+  border: none;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.accordion-content {
+  display: none;
+  padding: 10px 0;
+}
+
+.size-chart table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.size-chart th,
+.size-chart td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+.size-chart th {
+  background: #f9f9f9;
+}
+
+.value, .unit {
+  color: #000;
+}
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    height: auto;
+  }
+  
+  .product-gallery,
+  .product-details {
+    padding: 1rem;
+    border-right: none;
+  }
+}
+
+
+table {
+  width: 100%;
+  max-width: 400px;
+  border-collapse: collapse;
+  margin: 0 auto;
+}
+
+th, td {
+  padding: 10px;
+}
+
+th {
+  font-weight: normal;
+}
+
+td {
+  font-size: 16px;
+}
+
+.value {
+  color: red;
+  font-size: 18px;
+}
+
+.unit {
+  color: red;
+  font-size: 12px;
+}
+
+tr {
+  border-bottom: 1px solid #ccc;
+}
+
+tr:last-child {
+  border-bottom: none;
+}
+
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        height: auto;
+      }
+
+      .product-gallery,
+      .product-details {
+        flex: 1 1 auto;
+        height: auto;
+        border-right: none;
+        padding: 1rem;
+      }
+    }/* Base: Already clean, minimalist */
+
+.image-scroll img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 10px;
+}
+.cart-item .qty-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 5px 0;
+}
+
+.cart-item .qty-controls button {
+  width: 28px;
+  height: 28px;
+  border: 1px solid #ccc;
+  background: #f9f9f9;
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.cart-item .qty-controls button:hover {
+  background: #e0e0e0;
+  border-color: #999;
+}
+
+.cart-item .qty-controls span {
+  min-width: 24px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* Responsive Tweaks */
+@media (max-width: 1024px) {
+  .container {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .product-gallery,
+  .product-details {
+    flex: 1 1 auto;
+    padding: 1.5rem;
+    height: auto;
+    border-right: none;
+  }
+
+  .brand {
+    font-size: 1.3rem;
+    text-align: center;
+  }
+
+  .price {
+    font-size: 1rem;
+    text-align: center;
+  }
+
+  .product-details > div,
+  .product-description,
+  .accordion {
+    max-width: 100%;
+    margin: 0 auto;
+  }
+.cart-item-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.cart-item-content img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.cart-item-info {
+  flex: 1;
+}
+
+.qty-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.qty-controls button {
+  width: 28px;
+  height: 28px;
+  border: 1px solid #ccc;
+  background: #f9f9f9;
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.qty-controls button:hover {
+  background: #e0e0e0;
+  border-color: #999;
+}
+
+.qty-controls span {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.qty-controls .remove-btn {
+  border: none;
+  background: none;
+  color: #d00;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+  .add-to-cart {
+    width: 100%;
+    padding: 14px;
+    font-size: 1rem;
+  }
+
+  .accordion-toggle {
+    font-size: 1rem;
+    padding: 10px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .brand {
+    font-size: 1.1rem;
+  }
+
+  .price {
+    font-size: 0.95rem;
+  }
+
+  .accordion-toggle {
+    font-size: 0.95rem;
+  }
+
+  .product-description ul {
+    font-size: 0.85rem;
+  }
+}
+
+  </style>
+</head>
+<body>
+      <div class="overlay" id="overlay"></div>
+
+  <!-- Cart Sidebar -->
+<div class="cart-sidebar" id="cartSidebar">
+  <span class="cart-close" id="cartClose">&times;</span>
+  <h2>CART</h2>
+  <div class="cart-items" id="cartItems"></div>
+  <p class="cart-note">Shipping & taxes calculated at checkout<br><strong>Delivery: $2.00</strong></p>
+  <button class="checkout-btn" id="checkoutBtn">CHECK OUT $0.00</button>
+  <div id="bundle-suggestion"></div>
+</div>
+
+
+<header>
+  <div class="hamburger" onclick="toggleMobileNav()">☰</div>
+
+  <div id="mobileNav" class="sidebar hidden">
+    <div class="close-btn" onclick="toggleMobileNav()">×</div>
+    <a href="#store">Store</a>
+    <a href="#collection">Collection</a>
+    <a href="#about">About</a>
+  </div>
+
+  <div class="nav-left">
+   <div class="nav-item-dropdown">
+      <a href="home.html" class="nav-link" data-i18n="STORE">STORE</a>
+      <div class="nav-dropdown">
+        <a href="pro.html" data-i18n="VIEW ALL ITEMS">Réndezvouz “ Subtle ” Button Ups</a>
+        <a href="trouser.html" data-i18n="READY TO WEAR">Réndezvouz “ Subtle ” Trousers</a>
+      
+      </div>
+    </div>
+    <a href="#" data-i18n="COLLECTION">COLLECTION</a>
+    <a href="#" data-i18n="PROJECTS">PROJECTS</a>
+  </div>
+
+  <div class="logo">
+    <a href="#">
+      <img src="./img/loogo.gif" alt="VUJA DÉ" />
+    </a>
+  </div>
+
+  <div class="nav-right">
+    <div class="language-dropdown">
+      <a href="#" class="lang-toggle"><strong data-i18n="ENGLISH">EN</strong></a>
+      <div class="lang-options">
+        <a href="#" onclick="translatePage('en')">ENGLISH</a>
+        <a href="#" onclick="translatePage('km')">ភាសាខ្មែរ</a>
+      </div>
+    </div>
+    <a href="#" data-i18n="ACCOUNT">ACCOUNT</a>
+    <a href="#" data-i18n="SEARCH">SEARCH</a>
+    <a href="#" class="cart-icon" title="Cart" data-i18n="CART"  id="cartIcon">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 2L3 6v15a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V6l-3-4H6z"/>
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <path d="M16 10a4 4 0 0 1-8 0"/>
+      </svg>
+      <span id="cartCount">0</span>
+    </a>
+   
+  </div>
+  
+</header>
+  <div class="container">
+    <!-- Image Gallery -->
+    <div class="product-gallery">
+      <div class="image-scroll">
+        <img src="./img/pro1.JPEG" alt="Product Image 1">
+        <img src="./img/pro4.JPEG" alt="Product Image 2">
+        <img src="./img/shoot4.JPEG" alt="Product Image 3">
+        <img src="./img/shoot2.JPEG">
+      </div>
+    </div>
+
+    <!-- Product Info -->
+    <div class="product-details">
+      <div>
+        <h1 class="brand"> “ Subtle ” Trousers</h1>
+        <h2>Réndezvouz</h2>
+        <p class="price">$35.00 USD</p>
+        <a href="#" class="size-guide">Size Guide</a>
+  <select id="size">
+        <option value="S">S</option>
+        <option value="M">M</option>
+      </select>
+      <div style="display: flex; align-items: center; gap: 10px; margin: 1rem 0;">
+  <button id="decreaseQty" style="padding: 6px 10px; font-size: 16px;">-</button>
+  <span id="productQty" style="min-width: 24px; text-align: center;">1</span>
+  <button id="increaseQty" style="padding: 6px 10px; font-size: 16px;">+</button>
+</div>
+
+        <button class="add-to-cart">ADD TO CART</button>
+      </div>
+
+      <!-- Accordion Section -->
+  <div class="product-description" style="margin-top: 10px;">
+  <h3>DESCRIPTION</h3>
+  <ul>
+    <li>Made from 100% cotton drill</li>
+    <li>Black color way</li>
+    <li>Embroidered logo on front pocket and black belt loop</li>
+        <li>Balloon fitting</li>
+            <li>Double pleated</li>
+                <li>Custom size tag</li>
+  </ul>
+</div>
+<div class="accordion">
+  <button class="accordion-toggle">Size Chart</button>
+  <div class="accordion-content">
+    <div class="size-chart">
+    
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th>S</th>
+            <th>M</th>
+        
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>waist</td>
+            <td><span class="value">23-28</span><span class="unit">(inch)</span></td>
+            <td><span class="value">29-35</span><span class="unit">(inch)</span></td>
+          </tr>
+          <tr>
+            <td>length</td>
+            <td><span class="value">99</span><span class="unit">(cm)</span></td>
+            <td><span class="value">102</span><span class="unit">(cm)</span></td>
+          </tr>
+            <tr>
+            <td>hem</td>
+            <td><span class="value">32</span><span class="unit">(cm)</span></td>
+            <td><span class="value">35</span><span class="unit">(cm)</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+    </div>
+  </div>
+
+ 
+<script>
+const cart = [];
+const cartItemsContainer = document.getElementById("cartItems");
+const cartCount = document.getElementById("cartCount");
+const checkoutBtn = document.getElementById("checkoutBtn");
+const cartSidebar = document.getElementById("cartSidebar");
+const overlay = document.getElementById("overlay");
+let productQty = 1;
+
+// Accordion toggle
+document.querySelector('.accordion-toggle').addEventListener('click', function() {
+  const content = document.querySelector('.accordion-content');
+  content.style.display = (content.style.display === 'block') ? 'none' : 'block';
+});
+
+// Cart open/close
+document.getElementById("cartIcon").addEventListener("click", () => {
+  cartSidebar.style.right = "0";
+  overlay.style.display = "block";
+});
+
+document.getElementById("cartClose").addEventListener("click", () => {
+  cartSidebar.style.right = "-400px";
+  overlay.style.display = "none";
+});
+
+// Product quantity controls (outside cart)
+document.getElementById("increaseQty").addEventListener("click", () => {
+  productQty++;
+  document.getElementById("productQty").innerText = productQty;
+});
+
+document.getElementById("decreaseQty").addEventListener("click", () => {
+  if (productQty > 1) {
+    productQty--;
+    document.getElementById("productQty").innerText = productQty;
+  }
+});
+document.querySelector(".add-to-cart").addEventListener("click", () => {
+  const productName = document.querySelector(".brand").innerText.trim();
+  const size = document.getElementById("size").value;
+  const price = 35.00;
+  const image = "/img/pro3.JPEG";  // root-based path
+
+  const qty = productQty;
+
+  const existingItem = cart.find(item => item.name === productName && item.size === size);
+  if (existingItem) {
+    existingItem.qty += qty;
+  } else {
+    cart.push({ name: productName, size, price, qty, image });
+  }
+
+  updateCartUI();
+});
+
+// Update cart UI
+function updateCartUI() {
+  cartItemsContainer.innerHTML = "";
+
+  let total = 0;
+  let totalCount = 0;
+
+  cart.forEach((item, index) => {
+    const itemTotal = item.qty * item.price;
+    total += itemTotal;
+    totalCount += item.qty;
+
+    const div = document.createElement("div");
+    div.className = "cart-item";
+    div.innerHTML = `
+      <div class="cart-item-content">
+        <img src="${item.image}" alt="${item.name}">
+        <div class="cart-item-info">
+          <p><strong>${item.name}</strong> - Size: ${item.size}</p>
+          <p>${item.qty} × $${item.price.toFixed(2)}</p>
+          <p><strong>$${itemTotal.toFixed(2)}</strong></p>
+        </div>
+        <div class="qty-controls">
+          <button onclick="changeCartQty(${index}, -1)">-</button>
+          <span>${item.qty}</span>
+          <button onclick="changeCartQty(${index}, 1)">+</button>
+          <button class="remove-btn" onclick="removeItem(${index})">×</button>
+        </div>
+      </div>
+      <hr />
+    `;
+    cartItemsContainer.appendChild(div);
+  });
+
+  cartCount.innerText = totalCount;
+  checkoutBtn.innerText = `CHECK OUT $${(total + 2).toFixed(2)}`; // $2 delivery fee
+}
+
+// Change quantity in cart
+function changeCartQty(index, change) {
+  if (cart[index]) {
+    cart[index].qty += change;
+    if (cart[index].qty < 1) {
+      cart.splice(index, 1);
+    }
+    updateCartUI();
+  }
+}
+
+// Remove item
+function removeItem(index) {
+  if (cart[index]) {
+    cart.splice(index, 1);
+    updateCartUI();
+  }
+}
+
+// Checkout button logic
+checkoutBtn.addEventListener("click", () => {
+  localStorage.setItem("cartData", JSON.stringify(cart));
+  window.location.href = "checkout.html";
+});
+
+// Translations
+const translations = {
+  km: {
+    STORE: "ហាង",
+    COLLECTION: "បញ្ជីប្រមួល",
+    PROJECTS: "គម្រោង",
+    "VIEW ALL ITEMS": "មើលទាំងអស់",
+    "READY TO WEAR": "រួចរាល់សម្រាប់ពាក់",
+    ACCESSORIES: "គ្រឿងបន្លាស់",
+    ENGLISH: "អង់គ្លេស",
+    ACCOUNT: "គណនី",
+    SEARCH: "ស្វែងរក",
+    CART: "រទេះទំនិញ",
+    "ភាសាខ្មែរ": "ភាសាខ្មែរ"
+  },
+  en: {
+    STORE: "STORE",
+    COLLECTION: "COLLECTION",
+    PROJECTS: "PROJECTS",
+    "VIEW ALL ITEMS": "VIEW ALL ITEMS",
+    "READY TO WEAR": "READY TO WEAR",
+    ACCESSORIES: "ACCESSORIES",
+    ENGLISH: "ENGLISH",
+    ACCOUNT: "ACCOUNT",
+    SEARCH: "SEARCH",
+    CART: "CART",
+    "ភាសាខ្មែរ": "KHMER"
+  }
+};
+
+function translatePage(lang) {
+  document.querySelectorAll("[data-i18n]").forEach(el => {
+    const key = el.getAttribute("data-i18n");
+    if (translations[lang] && translations[lang][key]) {
+      el.textContent = translations[lang][key];
+    }
+  });
+}
+</script>
+
+
+
+</body>
+</html>

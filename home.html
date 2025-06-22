@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>bhaddict.rtw</title>
+   <link rel="icon" href="./img/logay.png" type="image/png">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="pro.css">
+<style>
+  .overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 900;
+  display: none;
+}
+
+.cart-icon {
+  position: relative;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+#cartCount {
+  position: absolute;
+  top: -8px;
+  right: -10px;
+  background-color: red;
+  color: white;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 50%;
+  font-weight: bold;
+}
+
+.overlay.show {
+  display: block;
+}
+
+.cart-sidebar {
+  position: fixed;
+  top: 0;
+  right: -400px;
+  width: 400px;
+  height: 100%;
+  background: white;
+  z-index: 1001;
+  padding: 30px;
+  transition: right 0.3s ease;
+  overflow-y: auto;
+}
+
+.cart-sidebar.open {
+  right: 0;
+}
+
+.cart-close {
+  position: absolute;
+  top: 20px;
+  right: 25px;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.cart-sidebar h2 {
+  font-size: 1rem;
+  letter-spacing: 2px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.cart-items {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cart-item {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 15px;
+}
+
+.cart-item img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.cart-item .details {
+  flex: 1;
+}
+
+.cart-item .qty {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 5px;
+}
+
+.cart-item .qty button {
+  border: none;
+  background: #eee;
+  padding: 3px 10px;
+  cursor: pointer;
+}
+
+.cart-item .remove {
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.cart-note {
+  font-size: 0.8rem;
+  font-style: italic;
+  margin-top: 30px;
+}
+
+.checkout-btn {
+  display: block;
+  width: 100%;
+  padding: 15px;
+  background: black;
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+  border: none;
+  cursor: pointer;
+  margin-top: 15px;
+}
+
+
+/* Optional: tighter gap on smaller screens */
+@media (max-width: 480px) {
+  .product-grid {
+    gap: 5px;
+  }
+  .product-image {
+  position: relative;
+  width: 100%;/* Square container for consistency */
+  overflow: hidden;
+}
+
+
+}
+
+
+</style>
+</head>
+<body>
+  <!-- Background music -->
+<audio id="bgMusic" src="./img/bhaddic.mp3" autoplay loop hidden></audio>
+  <div class="overlay" id="overlay"></div>
+
+  <!-- Cart Sidebar -->
+<div class="cart-sidebar" id="cartSidebar">
+  <span class="cart-close" id="cartClose">&times;</span>
+  <h2>CART</h2>
+  <div class="cart-items" id="cartItems"></div>
+  <p class="cart-note">Shipping & taxes calculated at checkout<br><strong>Delivery: $2.00</strong></p>
+  <button class="checkout-btn" id="checkoutBtn">CHECK OUT $0.00</button>
+  <div id="bundle-suggestion"></div>
+</div>
+
+
+<header>
+  <div class="hamburger" onclick="toggleMobileNav()">☰</div>
+
+  <div id="mobileNav" class="sidebar hidden">
+    <div class="close-btn" onclick="toggleMobileNav()">×</div>
+    <a href="home.html">HOME</a>
+    <a href="pro.html">Réndezvouz “ Subtle ” Button Ups</a>
+    <a href="trouser.html">Réndezvouz “ Subtle ” Trousers</a>
+  </div>
+
+  <div class="nav-left">
+    <div class="nav-item-dropdown">
+      <a href="#" class="nav-link" data-i18n="STORE">STORE</a>
+      <div class="nav-dropdown">
+        <a href="pro.html" data-i18n="VIEW ALL ITEMS">Réndezvouz “ Subtle ” Button Ups</a>
+        <a href="trouser.html" data-i18n="READY TO WEAR">Réndezvouz “ Subtle ” Trousers</a>
+      
+      </div>
+    </div>
+    <a href="#" data-i18n="COLLECTION">COLLECTION</a>
+    <a href="#" data-i18n="PROJECTS">PROJECTS</a>
+  </div>
+
+  <div class="logo">
+    <a href="#">
+      <img src="./img/loogo.gif" alt="VUJA DÉ" />
+    </a>
+  </div>
+
+  <div class="nav-right">
+    <div class="language-dropdown">
+      <a href="#" class="lang-toggle"><strong data-i18n="ENGLISH">EN</strong></a>
+      <div class="lang-options">
+        <a href="#" onclick="translatePage('en')">ENGLISH</a>
+        <a href="#" onclick="translatePage('km')">ភាសាខ្មែរ</a>
+      </div>
+    </div>
+    <a href="#" data-i18n="ACCOUNT">ACCOUNT</a>
+    <a href="#" data-i18n="SEARCH">SEARCH</a>
+    <a href="#" class="cart-icon" title="Cart" data-i18n="CART"  id="cartIcon">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 2L3 6v15a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V6l-3-4H6z"/>
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <path d="M16 10a4 4 0 0 1-8 0"/>
+      </svg>
+      <span id="cartCount">0</span>
+    </a>
+   
+  </div>
+  
+</header>
+
+<section class="banner">
+  <img src="./img/bo4.JPG" alt="Model" />
+  <img src="./img/bo3.JPG" alt="Backpack" />
+</section>
+
+
+
+<div class="product-grid">
+
+<div class="product-card" data-id="1" data-name="Réndezvouz “ Subtle ” Button Ups" data-price="33.00" data-img="./img/bo1.JPG">
+  <a href="pro.html" class="product-card-link">
+    <div class="product-image">
+      <img src="./img/bo1.JPG" alt="Réndezvouz “ Subtle ” Button Ups" />
+      <img class="hover-image" src="./img/bo7.JPG" alt="Réndezvouz “ Subtle ” Button Ups" />
+    </div>
+    <h3 class="product-title">Réndezvouz “ Subtle ” Button Ups</h3>
+    <p class="product-price">$33.00</p>
+  </a>
+  <div class="quick-add" onclick="event.stopPropagation();">
+    <div class="sizes">
+      <button>S</button>
+      <button>M</button>
+      <button>L</button>
+    </div>
+    <button class="add-to-cart">Add to Cart</button>
+  </div>
+</div>
+
+
+<div class="product-card" data-id="2" data-name="Réndezvouz “ Subtle ” Trousers" data-price="35.00" data-img="./img/pro3.JPEG">
+  <a href="trouser.html" class="product-card-link">
+    <div class="product-image">
+      <img src="./img/pro3.JPEG" alt="Réndezvouz “ Subtle ” Trousers" />
+      <img class="hover-image" src="./img/pro12.JPEG" alt="Réndezvouz “ Subtle ” Trousers" />
+    </div>
+    <h3 class="product-title" style="text-decoration: none;">Réndezvouz “ Subtle ” Trousers</h3>
+    <p class="product-price">$35.00</p>
+  </a>
+  <div class="quick-add" onclick="event.stopPropagation();">
+    <div class="sizes">
+      <button>S</button>
+      <button>M</button>
+    </div>
+    <button class="add-to-cart">Add to Cart</button>
+  </div>
+</div>
+
+   </div>
+<footer>
+ 
+  <div class="footer-right">
+    <a href="#">BHADDICT</a>
+ 
+  </div>
+</footer>
+<script>
+// ----- CART SIDEBAR & STORAGE HANDLING -----
+
+const overlay = document.getElementById("overlay");
+const cartIcon = document.getElementById("cartIcon");
+const cartSidebar = document.getElementById("cartSidebar");
+const cartClose = document.getElementById("cartClose");
+const cartItemsEl = document.getElementById("cartItems");
+const checkoutBtn = document.getElementById("checkoutBtn");
+const cartCountEl = document.getElementById("cartCount");
+
+// Load cart from localStorage, prefer "cartData" to keep consistent with checkout.html
+let cart = JSON.parse(localStorage.getItem("cartData")) || [];
+
+// Show/hide cart sidebar
+overlay.addEventListener("click", () => {
+  cartSidebar.classList.remove("open");
+  overlay.classList.remove("show");
+});
+cartIcon.addEventListener("click", () => {
+  cartSidebar.classList.add("open");
+  overlay.classList.add("show");
+});
+cartClose.addEventListener("click", () => {
+  cartSidebar.classList.remove("open");
+  overlay.classList.remove("show");
+});
+
+// Add products to cart from product cards with size buttons
+document.querySelectorAll(".product-card").forEach(card => {
+  const id = card.dataset.id;
+  const name = card.dataset.name;
+  const price = parseFloat(card.dataset.price);
+  const image = card.dataset.img;  // data-img attribute on card
+
+  // Size buttons inside card
+  card.querySelectorAll(".sizes button").forEach(sizeBtn => {
+    sizeBtn.addEventListener("click", () => {
+      const selectedSize = sizeBtn.textContent.trim();
+      addToCart(id, name, price, image, selectedSize);
+    });
+  });
+
+  // Add to cart button (optional)
+  const addBtn = card.querySelector(".add-to-cart");
+  if (addBtn) {
+    addBtn.addEventListener("click", () => {
+      // Find selected size button (add "selected" class on click if you want)
+      const selectedSizeBtn = card.querySelector(".sizes button.selected") || card.querySelector(".sizes button");
+      if (!selectedSizeBtn) {
+        alert("Please select a size.");
+        return;
+      }
+      const selectedSize = selectedSizeBtn.textContent.trim();
+      addToCart(id, name, price, image, selectedSize);
+    });
+  }
+});
+
+// Add item or increase qty if already in cart
+function addToCart(id, name, price, image, size) {
+  const existingItem = cart.find(item => item.id === id && item.size === size);
+  if (existingItem) {
+    existingItem.qty++;
+  } else {
+    cart.push({ id, name, price, image, size, qty: 1 });
+  }
+  saveCart();
+  updateCart();
+  alert(`${name} (Size: ${size}) added to cart.`);
+}
+
+// Save cart array to localStorage under "cartData" key
+function saveCart() {
+  localStorage.setItem("cartData", JSON.stringify(cart));
+}
+
+// Update cart sidebar UI and checkout button price
+function updateCart() {
+  cartItemsEl.innerHTML = "";
+  let total = 0;
+  const delivery = 2;
+
+  cart.forEach((item, index) => {
+    total += item.price * item.qty;
+    const itemEl = document.createElement("div");
+    itemEl.classList.add("cart-item");
+    itemEl.innerHTML = `
+      <img src="${item.image}" alt="${item.name}" />
+      <div class="details">
+        <div><strong>${item.name}</strong> - ${item.size}</div>
+        <div>$${item.price.toFixed(2)}</div>
+        <div class="qty">
+          <button onclick="changeQty(${index}, -1)">−</button>
+          ${item.qty}
+          <button onclick="changeQty(${index}, 1)">+</button>
+        </div>
+      </div>
+      <div class="remove" onclick="removeItem(${index})">&times;</div>
+    `;
+    cartItemsEl.appendChild(itemEl);
+  });
+
+  // Bundle suggestions and cart note
+  const hasButtonUps = cart.some(item => item.name === "Réndezvouz “ Subtle ” Button Ups");
+  const hasTrousers = cart.some(item => item.name === "Réndezvouz “ Subtle ” Trousers");
+  const cartNote = document.querySelector(".cart-note");
+  if (cartNote) {
+    if (hasButtonUps && !hasTrousers) {
+      cartNote.innerHTML = `Add <strong>Réndezvouz “ Subtle ” Trousers</strong> to save $5!`;
+    } else if (!hasButtonUps && hasTrousers) {
+      cartNote.innerHTML = `Add <strong>Réndezvouz “ Subtle ” Button Ups</strong> to save $5!`;
+    } else {
+      cartNote.innerHTML = `Shipping & taxes calculated at checkout`;
+    }
+  }
+
+  const bundleSuggestionEl = document.getElementById("bundle-suggestion");
+  if (bundleSuggestionEl) {
+    bundleSuggestionEl.innerHTML = "";
+    if (hasButtonUps && !hasTrousers) {
+      bundleSuggestionEl.innerHTML = `
+        <div class="bundle-popup">
+          <p><strong>Complete the look!</strong> Add <em>“Subtle” Trousers</em> for $5 off!</p>
+          <img src="./img/pro3.JPEG" alt="Trousers" />
+          <div class="size-options">
+            <button onclick="handleBundleAdd('Réndezvouz “ Subtle ” Trousers', './img/pro3.JPEG', 35, 'S')">S</button>
+            <button onclick="handleBundleAdd('Réndezvouz “ Subtle ” Trousers', './img/pro3.JPEG', 35, 'M')">M</button>
+          </div>
+        </div>`;
+    } else if (!hasButtonUps && hasTrousers) {
+      bundleSuggestionEl.innerHTML = `
+        <div class="bundle-popup">
+          <p><strong>Complete the look!</strong> Add <em>“Subtle” Button Ups</em> for $5 off!</p>
+          <img src="./img/bo1.JPG" alt="Button Ups" />
+          <div class="size-options">
+            <button onclick="handleBundleAdd('Réndezvouz “ Subtle ” Button Ups', './img/bo1.JPG', 35, 'S')">S</button>
+            <button onclick="handleBundleAdd('Réndezvouz “ Subtle ” Button Ups', './img/bo1.JPG', 35, 'M')">M</button>
+            <button onclick="handleBundleAdd('Réndezvouz “ Subtle ” Button Ups', './img/bo1.JPG', 35, 'L')">L</button>
+          </div>
+        </div>`;
+    }
+  }
+
+  // Calculate bundle discount total price
+  const buttonUpsQty = cart.filter(item => item.name === "Réndezvouz “ Subtle ” Button Ups").reduce((sum, item) => sum + item.qty, 0);
+  const trousersQty = cart.filter(item => item.name === "Réndezvouz “ Subtle ” Trousers").reduce((sum, item) => sum + item.qty, 0);
+  const bundleCount = Math.min(buttonUpsQty, trousersQty);
+
+  let finalTotal;
+  if (bundleCount > 0) {
+    const buttonUpsPrice = 67;
+    const trousersPrice = 35;
+    const extraButtonUps = buttonUpsQty - bundleCount;
+    const extraTrousers = trousersQty - bundleCount;
+    finalTotal = bundleCount * 65  // discounted bundle price
+               + extraButtonUps * buttonUpsPrice
+               + extraTrousers * trousersPrice;
+  } else {
+    finalTotal = total;
+  }
+
+  const currentText = checkoutBtn.innerText;
+  const oldPrice = parseFloat(currentText.replace(/[^\d.]/g, '')) || (total + delivery);
+  animatePriceChange(oldPrice, finalTotal, delivery);
+
+  // Update cart count badge
+  cartCountEl.innerText = cart.reduce((sum, item) => sum + item.qty, 0);
+
+  // Save cart to localStorage
+  saveCart();
+}
+
+// Animate price change on checkout button
+function animatePriceChange(from, to, delivery, duration = 1000) {
+  const start = performance.now();
+
+  function update(now) {
+    const elapsed = now - start;
+    const progress = Math.min(elapsed / duration, 1);
+    const current = from + (to - from) * progress;
+    checkoutBtn.innerText = `CHECK OUT • $${(current + delivery).toFixed(2)}`;
+    if (progress < 1) requestAnimationFrame(update);
+  }
+
+  requestAnimationFrame(update);
+}
+
+// Handle bundle add buttons
+function handleBundleAdd(name, img, price, size) {
+  if (!size) {
+    alert("Please select a size.");
+    return;
+  }
+  addToCart(null, name, price, img, size);  // id = null for bundles if no id?
+}
+
+// Quantity change handlers (exposed globally for inline onclick)
+window.changeQty = function(index, delta) {
+  cart[index].qty += delta;
+  if (cart[index].qty <= 0) {
+    cart.splice(index, 1);
+  }
+  updateCart();
+};
+window.removeItem = function(index) {
+  cart.splice(index, 1);
+  updateCart();
+};
+
+// Checkout button redirects
+checkoutBtn.addEventListener("click", () => {
+  window.location.href = "checkout.html";
+});
+
+// Initialize cart UI on page load
+updateCart();
+
+// Mobile nav toggle
+function toggleMobileNav() {
+  const nav = document.getElementById("mobileNav");
+  nav.classList.toggle("show");
+}
+const translations = {
+  km: {
+    STORE: "ហាង",
+    COLLECTION: "បញ្ជីប្រមួល",
+    PROJECTS: "គម្រោង",
+    "VIEW ALL ITEMS": "មើលទាំងអស់",
+    "READY TO WEAR": "រួចរាល់សម្រាប់ពាក់",
+    ACCESSORIES: "គ្រឿងបន្លាស់",
+    ENGLISH: "អង់គ្លេស",
+    ACCOUNT: "គណនី",
+    SEARCH: "ស្វែងរក",
+    CART: "រទេះទំនិញ",
+    "ភាសាខ្មែរ": "ភាសាខ្មែរ"
+  },
+  en: {
+    STORE: "STORE",
+    COLLECTION: "COLLECTION",
+    PROJECTS: "PROJECTS",
+    "VIEW ALL ITEMS": "VIEW ALL ITEMS",
+    "READY TO WEAR": "READY TO WEAR",
+    ACCESSORIES: "ACCESSORIES",
+    ENGLISH: "ENGLISH",
+    ACCOUNT: "ACCOUNT",
+    SEARCH: "SEARCH",
+    CART: "CART",
+    "ភាសាខ្មែរ": "KHMER"
+  }
+};
+
+function translatePage(lang) {
+  document.querySelectorAll("[data-i18n]").forEach(el => {
+    const key = el.getAttribute("data-i18n");
+    if (translations[lang] && translations[lang][key]) {
+      el.textContent = translations[lang][key];
+    }
+  });
+}
+// Language translations omitted for brevity
+ document.addEventListener('click', function playAudioOnce() {
+    const bgMusic = document.getElementById('bgMusic');
+    if (bgMusic.paused) {
+      bgMusic.play().catch(() => {
+        console.log("Autoplay blocked until user interacts.");
+      });
+    }
+    document.removeEventListener('click', playAudioOnce);
+  });
+</script>
+
+
+
+
+</body>
+</html>

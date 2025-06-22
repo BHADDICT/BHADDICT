@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+ <title>PHИOM®</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="icon" href="./img/logo.PNG" type="image/png">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f9f9f9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      animation: fadeIn 1.5s ease-in;
+    }
+
+    .thank-you-container {
+      background: #fff;
+      padding: 40px;
+      border-radius: 16px;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      animation: popUp 1s ease forwards;
+      max-width: 500px;
+    }
+
+    .thank-you-container img {
+      width: 100px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    p {
+      color: #555;
+      font-size: 1rem;
+      margin-bottom: 30px;
+    }
+
+    .btn-home {
+      padding: 12px 24px;
+      font-size: 1rem;
+      background-color: #000;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.3s ease, transform 0.3s ease;
+    }
+
+    .btn-home:hover {
+      background-color: #333;
+      transform: scale(1.05);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes popUp {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="thank-you-container">
+    <img src="https://cdn-icons-png.flaticon.com/512/845/845646.png" alt="Success Icon">
+    <h1>Thank You for Your Order!</h1>
+    <p>Your payment has been received and your order is being processed.</p>
+    <p>lots of love from BHADDICT.</p>
+    <a href="index.html" class="btn-home">Continue Shopping</a>
+  </div>
+</body>
+</html>
