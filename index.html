@@ -136,6 +136,27 @@
   cursor: pointer;
   margin-top: 15px;
 }
+button.sold-out {
+  background-color: #ccc;         /* Gray background to show unavailability */
+  color: #666;                    /* Dimmed text */
+  cursor: not-allowed;            /* Cursor indicates it's not clickable */
+  border: 1px solid #999;
+  opacity: 0.6;                   /* Slight transparency */
+  pointer-events: none;          /* Disable clicking */
+  position: relative;
+}
+
+button.sold-out::after {
+  content: "/";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: red;
+  font-size: 0.75em;
+  font-weight: bold;
+  white-space: nowrap;
+}
 
 
 /* Optional: tighter gap on smaller screens */
@@ -263,7 +284,7 @@
   </a>
   <div class="quick-add" onclick="event.stopPropagation();">
     <div class="sizes">
-      <button>S</button>
+      <button class="sold-out">S</button>
       <button>M</button>
     </div>
     <button class="add-to-cart">Add to Cart</button>
