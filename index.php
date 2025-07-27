@@ -197,17 +197,17 @@ button.sold-out::after {
 
   <div id="mobileNav" class="sidebar hidden">
     <div class="close-btn" onclick="toggleMobileNav()">×</div>
-    <a href="home.html">HOME</a>
-    <a href="pro.html">Réndezvouz “ Subtle ” Button Ups</a>
-    <a href="trouser.html">Réndezvouz “ Subtle ” Trousers</a>
+    <a href="index.php">HOME</a>
+    <a href="pro.php">Réndezvouz “ Subtle ” Button Ups</a>
+    <a href="trouser.php">Réndezvouz “ Subtle ” Trousers</a>
   </div>
 
   <div class="nav-left">
     <div class="nav-item-dropdown">
       <a href="#" class="nav-link" data-i18n="STORE">STORE</a>
       <div class="nav-dropdown">
-        <a href="pro.html" data-i18n="VIEW ALL ITEMS">Réndezvouz “ Subtle ” Button Ups</a>
-        <a href="trouser.html" data-i18n="READY TO WEAR">Réndezvouz “ Subtle ” Trousers</a>
+        <a href="pro.php" data-i18n="VIEW ALL ITEMS">Réndezvouz “ Subtle ” Button Ups</a>
+        <a href="trouser.php" data-i18n="READY TO WEAR">Réndezvouz “ Subtle ” Trousers</a>
       
       </div>
     </div>
@@ -254,7 +254,7 @@ button.sold-out::after {
 <div class="product-grid">
 
 <div class="product-card" data-id="1" data-name="Réndezvouz “ Subtle ” Button Ups" data-price="33.00" data-img="./img/bo1.JPG">
-  <a href="pro.html" class="product-card-link">
+  <a href="pro.php" class="product-card-link">
     <div class="product-image">
       <img src="./img/bo1.JPG" alt="Réndezvouz “ Subtle ” Button Ups" />
       <img class="hover-image" src="./img/bo7.JPG" alt="Réndezvouz “ Subtle ” Button Ups" />
@@ -274,7 +274,7 @@ button.sold-out::after {
 
 
 <div class="product-card" data-id="2" data-name="Réndezvouz “ Subtle ” Trousers" data-price="35.00" data-img="./img/pro3.JPEG">
-  <a href="trouser.html" class="product-card-link">
+  <a href="trouser.php" class="product-card-link">
     <div class="product-image">
       <img src="./img/pro3.JPEG" alt="Réndezvouz “ Subtle ” Trousers" />
       <img class="hover-image" src="./img/pro12.JPEG" alt="Réndezvouz “ Subtle ” Trousers" />
@@ -310,7 +310,7 @@ const cartItemsEl = document.getElementById("cartItems");
 const checkoutBtn = document.getElementById("checkoutBtn");
 const cartCountEl = document.getElementById("cartCount");
 
-// Load cart from localStorage, prefer "cartData" to keep consistent with checkout.html
+
 let cart = JSON.parse(localStorage.getItem("cartData")) || [];
 
 // Show/hide cart sidebar
@@ -511,7 +511,7 @@ window.removeItem = function(index) {
 
 // Checkout button redirects
 checkoutBtn.addEventListener("click", () => {
-  window.location.href = "checkout.html";
+  window.location.href = "checkout.php";
 });
 
 // Initialize cart UI on page load

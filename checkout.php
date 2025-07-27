@@ -1,10 +1,105 @@
+<?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require 'vendor/autoload.php';
+
+$status = "";
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $name = htmlspecialchars($_POST['name']);
+    $email = htmlspecialchars($_POST['email']);
+    $order = htmlspecialchars($_POST['order']);
+$instagram = htmlspecialchars($_POST['instagram'] ?? '');
+$phone = htmlspecialchars($_POST['phone'] ?? '');
+$address = htmlspecialchars($_POST['address'] ?? '');
+$region = htmlspecialchars($_POST['region'] ?? '');
+$province = htmlspecialchars($_POST['province'] ?? '');
+$payment = htmlspecialchars($_POST['payment'] ?? '');
+
+    $mail = new PHPMailer(true);
+
+    try {
+        $mail->isSMTP();
+        $mail->Host = 'smtp.gmail.com';
+        $mail->SMTPAuth = true;
+        $mail->Username = 'masitamaramsa@gmail.com';
+        $mail->Password = 'ukepdinogzecdsnw'; // App password
+        $mail->SMTPSecure = 'tls';
+        $mail->Port = 587;
+
+        $mail->setFrom('masitamaramsa@gmail.com', 'Order Form');
+        $mail->addAddress('masitamaramsa@gmail.com');
+
+        $mail->isHTML(true);
+        $mail->Subject = "New Order from $name";
+
+        // Format email content
+        $lines = explode("\n", $order);
+        $mail->Body = "
+        <div style='background:#121212; color:#eee; font-family:sans-serif; padding:20px;'>
+           <h2 style='border-bottom:1px solid #444;'>Customer Information</h2>
+            <table style='width:100%; border-collapse:collapse; margin-bottom:20px;'>
+                <tr><td style='padding:8px; border:1px solid #444;'>Email</td><td style='padding:8px; border:1px solid #444;'>$email</td></tr>
+                <tr><td style='padding:8px; border:1px solid #444;'>Name</td><td style='padding:8px; border:1px solid #444;'>$name</td></tr>
+                <tr><td style='padding:8px; border:1px solid #444;'>Instagram</td><td style='padding:8px; border:1px solid #444;'>$instagram</td></tr>
+                <tr><td style='padding:8px; border:1px solid #444;'>Phone</td><td style='padding:8px; border:1px solid #444;'>$phone</td></tr>
+                <tr><td style='padding:8px; border:1px solid #444;'>Address</td><td style='padding:8px; border:1px solid #444;'>$address</td></tr>
+                <tr><td style='padding:8px; border:1px solid #444;'>Region</td><td style='padding:8px; border:1px solid #444;'>$region</td></tr>
+                <tr><td style='padding:8px; border:1px solid #444;'>Province</td><td style='padding:8px; border:1px solid #444;'>$province</td></tr>
+                <tr><td style='padding:8px; border:1px solid #444;'>Payment</td><td style='padding:8px; border:1px solid #444;'>$payment</td></tr>
+                <tr><td style='padding:8px; border:1px solid #444;'>Order Time</td><td style='padding:8px; border:1px solid #444;'>".date('Y-m-d H:i')."</td></tr>
+            </table>
+
+            <h2 style='border-bottom:1px solid #444;'>Order Summary</h2>
+            <table style='width:100%; border-collapse:collapse;'>
+                <tr style='background:#1e1e1e;'>
+                    <th style='padding:10px; border:1px solid #444;'>Item</th>
+                    <th style='padding:10px; border:1px solid #444;'>Qty</th>
+                    <th style='padding:10px; border:1px solid #444;'>Size</th>
+                    <th style='padding:10px; border:1px solid #444;'>Price</th>
+                </tr>";
+
+        foreach ($lines as $line) {
+            if (strpos($line, 'Item:') !== false) {
+                preg_match('/Item: (.*), Qty: (\d+), Size: (.*), Total: \$(.*)/', $line, $matches);
+                $mail->Body .= "<tr>
+                    <td style='padding:8px; border:1px solid #444;'>".$matches[1]."</td>
+                    <td style='padding:8px; border:1px solid #444;'>".$matches[2]."</td>
+                    <td style='padding:8px; border:1px solid #444;'>".$matches[3]."</td>
+                    <td style='padding:8px; border:1px solid #444;'>$".$matches[4]."</td>
+                </tr>";
+            }
+        }
+
+        $mail->Body .= "
+            </table>
+            <div style='margin-top:15px; font-size:14px;'>
+                <p><strong>".htmlspecialchars($lines[count($lines)-3])."</strong></p>
+                <p><strong>".htmlspecialchars($lines[count($lines)-2])."</strong></p>
+                <p><strong style='font-size:18px;'>".htmlspecialchars($lines[count($lines)-1])."</strong></p>
+            </div>
+            <p style='font-size:12px; margin-top:30px; color:#888;'>Sent via PHPMailer</p>
+        </div>";
+
+      $mail->send();
+        header("Location: thankyou.php");
+        exit();
+
+    } catch (Exception $e) {
+        // ❌ Show error
+        echo "Error sending email: {$mail->ErrorInfo}";
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Bhaddict</title>
-     <link rel="icon" href="./img/logay.png" type="image/png">
+  <link rel="icon" href="./img/logay.png" type="image/png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
       body {
@@ -391,21 +486,19 @@
     </div>
 
     <button id="payNow">Confirm Order</button>
+    <p style="margin-top:15px; color:green;"><?php echo $status; ?></p>
   </div>
 
   <div class="checkout-right" id="orderSummary">
-    <!-- Order summary will render here -->
+    <!-- Order summary will be rendered here -->
   </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
 <script>
 window.addEventListener('load', function () {
-  emailjs.init('jI4O--8j4phl8q7qx');
-
   const deliveryFee = 2.00;
   let discountRate = 0;
 
-  // For demo/testing only: initialize cart if not present
   if (!localStorage.getItem("cartData")) {
     localStorage.setItem("cartData", JSON.stringify([
       {
@@ -489,17 +582,12 @@ window.addEventListener('load', function () {
     e.preventDefault();
 
     const email = document.getElementById("email").value.trim();
-    const region = document.getElementById("regionSelect").value;
-    const province = document.getElementById("provinceInput").value.trim();
     const firstName = document.getElementById("firstName").value.trim();
     const lastName = document.getElementById("lastName").value.trim();
-    const instagram = document.getElementById("instagramInput").value.trim();
-    const address = document.getElementById("address").value.trim();
-    const phone = document.getElementById("phone").value.trim();
     const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
 
-    if (!email) {
-      alert("Please enter your email.");
+    if (!email || !firstName || !lastName) {
+      alert("Please fill in all required fields.");
       return;
     }
 
@@ -515,90 +603,46 @@ window.addEventListener('load', function () {
     }
 
     let subtotal = 0;
-    const itemsHtml = cart.map(item => {
+    const itemsText = cart.map(item => {
       subtotal += item.price * item.qty;
-      return `
-        <tr>
-          <td>${item.name}</td>
-          <td align="center">${item.qty}</td>
-          <td align="center">${item.size || '-'}</td>
-          <td align="right">$${(item.price * item.qty).toFixed(2)}</td>
-        </tr>`;
-    }).join('');
+      return `Item: ${item.name}, Qty: ${item.qty}, Size: ${item.size || '-'}, Total: $${(item.price * item.qty).toFixed(2)}`;
+    }).join('\n');
 
     const discountAmount = subtotal * discountRate;
     const total = (subtotal - discountAmount + deliveryFee).toFixed(2);
 
-    const orderData = {
-      email: email,
-      region: region,
-      province: province,
-      first_name: firstName,
-      last_name: lastName,
-      instagram: instagram,
-      address: address,
-      phone: phone,
-      payment_method: paymentMethod.value,
-      subtotal: subtotal.toFixed(2),
-      discount: discountAmount.toFixed(2),
-      delivery_fee: deliveryFee.toFixed(2),
-      total: total,
-      htmlContent: `
-        <h2>Order Information</h2>
-        <table border="1" cellpadding="8" cellspacing="0" style="border-collapse: collapse; width: 100%; font-family: Arial, sans-serif;">
-          <tr><th align="left">Field</th><th align="left">Details</th></tr>
-          <tr><td>Email</td><td>${email}</td></tr>
-          <tr><td>Region</td><td>${region === 'pr' ? 'Provinces' : region === 'MY' ? 'Phnom Penh' : region}</td></tr>
-          <tr><td>Province</td><td>${province || '-'}</td></tr>
-          <tr><td>First Name</td><td>${firstName}</td></tr>
-          <tr><td>Last Name</td><td>${lastName}</td></tr>
-          <tr><td>Instagram</td><td>${instagram || '-'}</td></tr>
-          <tr><td>Address</td><td>${address}</td></tr>
-          <tr><td>Phone</td><td>${phone}</td></tr>
-          <tr><td>Payment Method</td><td>${paymentMethod.value === 'paid' ? 'Paid' : 'Cash On Delivery (COD)'}</td></tr>
-        </table>
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.style.display = "none";
 
-        <h2>Order Summary</h2>
-        <table border="1" cellpadding="8" cellspacing="0" style="border-collapse: collapse; width: 100%; font-family: Arial, sans-serif; margin-top: 10px;">
-          <tr><th align="left">Item</th><th align="center">Qty</th><th align="center">Size</th><th align="right">Price</th></tr>
-          ${itemsHtml}
-          <tr>
-            <td colspan="3" align="right"><strong>Subtotal</strong></td>
-            <td align="right">$${subtotal.toFixed(2)}</td>
-          </tr>
-          ${discountRate > 0 ? `
-          <tr>
-            <td colspan="3" align="right"><strong>Discount</strong></td>
-            <td align="right">-$${discountAmount.toFixed(2)}</td>
-          </tr>` : ''}
-          <tr>
-            <td colspan="3" align="right"><strong>Delivery Fee</strong></td>
-            <td align="right">$${deliveryFee.toFixed(2)}</td>
-          </tr>
-          <tr>
-            <td colspan="3" align="right"><strong>Total</strong></td>
-            <td align="right"><strong>$${total}</strong></td>
-          </tr>
-        </table>`
-    };
+   const fields = {
+  name: firstName + " " + lastName,
+  email: email,
+  instagram: document.getElementById("instagramInput").value.trim(),
+  phone: document.getElementById("phone").value.trim(),
+  address: document.getElementById("address").value.trim(),
+  region: document.getElementById("regionSelect").value === "pr" ? "Provinces" : "Phnom Penh",
+  province: document.getElementById("provinceInput").value.trim(),
+  payment: document.querySelector('input[name="paymentMethod"]:checked').value,
+  order: `${itemsText}\nSubtotal: $${subtotal.toFixed(2)}\n${discountRate > 0 ? "Discount: -$" + discountAmount.toFixed(2) + "\n" : ""}Shipping: $${deliveryFee.toFixed(2)}\nTotal: $${total}`
+};
 
-    emailjs.send("service_yavv28j", "template_ylal54a", orderData)
-      .then(function (response) {
-        console.log("SUCCESS", response.status, response.text);
-        alert("Order sent successfully!");
-        localStorage.removeItem("cartData");
-        window.location.href = "thankyou.html";
-      }, function (error) {
-        console.error("FAILED", error);
-        alert("Failed to send order. Please check console for details.");
-      });
+
+    for (const key in fields) {
+      const input = document.createElement("input");
+      input.type = "hidden";
+      input.name = key;
+      input.value = fields[key];
+      form.appendChild(input);
+    }
+
+    document.body.appendChild(form);
+    form.submit();
   });
 
   renderOrderSummary();
 });
 </script>
-
-
 
 </body>
 </html>

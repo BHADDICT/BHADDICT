@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Product Page</title>
-    <title>Bhaddict</title>
+  <title>Bhaddict</title>
      <link rel="icon" href="./img/logay.png" type="image/png">
     <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="pro.css">
@@ -558,7 +557,6 @@ tr:last-child {
   </style>
 </head>
 <body>
-  <audio id="bgMusic" src="./img/bhaddic.mp3" autoplay loop hidden></audio>
       <div class="overlay" id="overlay"></div>
 
   <!-- Cart Sidebar -->
@@ -583,11 +581,11 @@ tr:last-child {
   </div>
 
   <div class="nav-left">
-    <div class="nav-item-dropdown">
-      <a href="index.html" class="nav-link" data-i18n="STORE">STORE</a>
+   <div class="nav-item-dropdown">
+      <a href="index.php" class="nav-link" data-i18n="STORE">STORE</a>
       <div class="nav-dropdown">
-        <a href="pro.html" data-i18n="VIEW ALL ITEMS">Réndezvouz “ Subtle ” Button Ups</a>
-        <a href="trouser.html" data-i18n="READY TO WEAR">Réndezvouz “ Subtle ” Trousers</a>
+        <a href="pro.php" data-i18n="VIEW ALL ITEMS">Réndezvouz “ Subtle ” Button Ups</a>
+        <a href="trouser.php" data-i18n="READY TO WEAR">Réndezvouz “ Subtle ” Trousers</a>
       
       </div>
     </div>
@@ -627,25 +625,23 @@ tr:last-child {
     <!-- Image Gallery -->
     <div class="product-gallery">
       <div class="image-scroll">
-        <img src="./img/bo1.JPG" alt="Product Image 1">
-        <img src="./img/bo2.JPG" alt="Product Image 2">
-        <img src="./img/bo3.JPG" alt="Product Image 3">
-        <img src="./img/bo4.JPG">
+        <img src="./img/pro1.JPEG" alt="Product Image 1">
+        <img src="./img/pro4.JPEG" alt="Product Image 2">
+        <img src="./img/shoot4.JPEG" alt="Product Image 3">
+        <img src="./img/shoot2.JPEG">
       </div>
     </div>
 
     <!-- Product Info -->
     <div class="product-details">
       <div>
-        <h1 class="brand"> “ Subtle ” Button Ups</h1>
+        <h1 class="brand"> “ Subtle ” Trousers</h1>
         <h2>Réndezvouz</h2>
-        <p class="price">$33.00 USD</p>
+        <p class="price">$35.00 USD</p>
         <a href="#" class="size-guide">Size Guide</a>
   <select id="size">
-        <option value="S">S</option>
+        <option value="S" disabled>S</option>
         <option value="M">M</option>
-        <option value="L" selected>L</option>
-        <option value="XL">XL</option>
       </select>
       <div style="display: flex; align-items: center; gap: 10px; margin: 1rem 0;">
   <button id="decreaseQty" style="padding: 6px 10px; font-size: 16px;">-</button>
@@ -660,12 +656,12 @@ tr:last-child {
   <div class="product-description" style="margin-top: 10px;">
   <h3>DESCRIPTION</h3>
   <ul>
-    <li> Made from 100% khaki fabric</li>
-    <li>Navy blue color way</li>
-    <li> Oversized fit and cropped</li>
-    <li> Hidden red buttons detailing</li>
-    <li>Embroidered logo on neck collar</li>
-    <li>Custom size tag</li>
+    <li>Made from 100% cotton drill</li>
+    <li>Black color way</li>
+    <li>Embroidered logo on front pocket and black belt loop</li>
+        <li>Balloon fitting</li>
+            <li>Double pleated</li>
+                <li>Custom size tag</li>
   </ul>
 </div>
 <div class="accordion">
@@ -679,21 +675,24 @@ tr:last-child {
             <th></th>
             <th>S</th>
             <th>M</th>
-            <th>L</th>
+        
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>pit to pit</td>
-            <td><span class="value">49</span><span class="unit">(cm)</span></td>
-            <td><span class="value">50</span><span class="unit">(cm)</span></td>
-            <td><span class="value">51</span><span class="unit">(cm)</span></td>
+            <td>waist</td>
+            <td><span class="value">23-28</span><span class="unit">(inch)</span></td>
+            <td><span class="value">29-35</span><span class="unit">(inch)</span></td>
           </tr>
           <tr>
             <td>length</td>
-            <td><span class="value">58</span><span class="unit">(cm)</span></td>
-            <td><span class="value">62</span><span class="unit">(cm)</span></td>
-            <td><span class="value">66</span><span class="unit">(cm)</span></td>
+            <td><span class="value">99</span><span class="unit">(cm)</span></td>
+            <td><span class="value">102</span><span class="unit">(cm)</span></td>
+          </tr>
+            <tr>
+            <td>hem</td>
+            <td><span class="value">32</span><span class="unit">(cm)</span></td>
+            <td><span class="value">35</span><span class="unit">(cm)</span></td>
           </tr>
         </tbody>
       </table>
@@ -742,13 +741,12 @@ document.getElementById("decreaseQty").addEventListener("click", () => {
     document.getElementById("productQty").innerText = productQty;
   }
 });
-
-// Add to cart
 document.querySelector(".add-to-cart").addEventListener("click", () => {
   const productName = document.querySelector(".brand").innerText.trim();
   const size = document.getElementById("size").value;
-  const price = 33.00;
-  const image = "./img/bo1.JPG";
+  const price = 35.00;
+  const image = "/img/pro3.JPEG";  // root-based path
+
   const qty = productQty;
 
   const existingItem = cart.find(item => item.name === productName && item.size === size);
@@ -821,7 +819,7 @@ function removeItem(index) {
 // Checkout button logic
 checkoutBtn.addEventListener("click", () => {
   localStorage.setItem("cartData", JSON.stringify(cart));
-  window.location.href = "checkout.html";
+  window.location.href = "checkout.php";
 });
 
 // Translations
@@ -862,15 +860,6 @@ function translatePage(lang) {
     }
   });
 }
- document.addEventListener('click', function playAudioOnce() {
-    const bgMusic = document.getElementById('bgMusic');
-    if (bgMusic.paused) {
-      bgMusic.play().catch(() => {
-        console.log("Autoplay blocked until user interacts.");
-      });
-    }
-    document.removeEventListener('click', playAudioOnce);
-  });
 </script>
 
 
